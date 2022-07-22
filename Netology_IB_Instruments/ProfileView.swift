@@ -8,15 +8,33 @@
 import UIKit
 
 class ProfileView: UIView {
-
-
-    override func draw(_ rect: CGRect) {
+   
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var cityLabel: UILabel!
+    @IBOutlet weak var dateOfBithLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var avatarImageView: UIImageView!
+    
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.setup()
+        
     }
-
-    @IBOutlet weak var text: UITextView!
-    @IBOutlet weak var city: UILabel!
-    @IBOutlet weak var dateOfBith: UILabel!
-    @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var image: UIImageView!
+    private func setup() {
+        let view = self.loadViewFromXib()
+        self.addSubview(view)
+        view.frame = self.bounds
+        
+    }
+    
+    private func loadViewFromXib() -> UIView {
+        guard let view = Bundle.main.loadNibNamed("ProfileView", owner: self)?.first as? UIView else {
+            return UIView()
+        }
+        return view
+    }
+    
+    
 }
 

@@ -71,10 +71,10 @@
 				58A45177287EE5DD00E3347C /* Assets.xcassets */,
 				58A45179287EE5DD00E3347C /* LaunchScreen.storyboard */,
 				58A4517C287EE5DD00E3347C /* Info.plist */,
-				58A45182287EE60700E3347C /* ProfileView.xib */,
-				58A45186287EED0900E3347C /* Profile.storyboard */,
 				58A45188287EED3D00E3347C /* ProfileViewController.swift */,
+				58A45186287EED0900E3347C /* Profile.storyboard */,
 				58A45184287EE99500E3347C /* ProfileView.swift */,
+				58A45182287EE60700E3347C /* ProfileView.xib */,
 			);
 			path = Netology_IB_Instruments;
 			sourceTree = "<group>";
