@@ -14,7 +14,7 @@ class FeedViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        title = "Feed"
+        self.navigationItem.title = "Feed"
         view.backgroundColor = .systemMint
         setupButton()
         
