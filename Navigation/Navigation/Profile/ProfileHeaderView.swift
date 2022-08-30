@@ -9,13 +9,12 @@ import UIKit
 
 class ProfileHeaderView: UIView {
     
-    
-    
     private lazy var imageView: UIImageView = {
+        
         let imageView = UIImageView(image: UIImage(named: "guest"))
         
-        imageView.frame.size = CGSize(width: 160, height: 160) //размеры новой картинки
-        imageView.layer.cornerRadius = 80
+        imageView.frame.size = CGSize(width: 140, height: 140) //размеры новой картинки
+        imageView.layer.cornerRadius = 70
         imageView.clipsToBounds = true
         imageView.layer.borderColor = UIColor.white.cgColor // цвет рамки
         imageView.layer.borderWidth = 3 // толщина рамки
@@ -35,13 +34,14 @@ class ProfileHeaderView: UIView {
         statusLabel.text = ""
         statusLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         statusLabel.textAlignment = .left
-//        statusLabel.backgroundColor = .red
+        
         return statusLabel
     }()
     
     private lazy var button: UIButton = {
         
         let button = UIButton()
+        
         button.backgroundColor = .blue
         button.layer.cornerRadius = 4
         button.setTitle("Show my status", for: .normal)
@@ -52,9 +52,22 @@ class ProfileHeaderView: UIView {
         button.layer.shadowOffset = CGSize(width: -4, height: 4)
         button.layer.shadowOpacity = 0.7
         button.addTarget(self, action: #selector(buttonTaped), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
+    }()
+    
+    private lazy var buttonNew: UIButton = {
+        
+        let buttonNew = UIButton()
+        buttonNew.backgroundColor = .blue
+        buttonNew.backgroundColor = .blue
+        buttonNew.setTitle("Exit", for: .normal)
+        buttonNew.setTitleColor(.white, for: .normal)
+        buttonNew.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        
+        return buttonNew
+        
+        
     }()
     
     private lazy var textField: UITextField = {
@@ -63,7 +76,7 @@ class ProfileHeaderView: UIView {
         textField.textColor = .lightGray
         textField.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         textField.clearButtonMode = .whileEditing // Кнопка «Очистить» при редактировании
-         textField.clearButtonMode = .always // Всегда показывать кнопку очистки
+        textField.clearButtonMode = .always // Всегда показывать кнопку очистки
         
         textField.returnKeyType = .done
         textField.borderStyle = UITextField.BorderStyle.roundedRect
@@ -94,34 +107,78 @@ class ProfileHeaderView: UIView {
     
     private func programmSetup(){
         self.backgroundColor = #colorLiteral(red: 0.8196074367, green: 0.8196083307, blue: 0.8411096334, alpha: 1)
+        //        self.backgroundColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
         self.addSubview(self.imageView)
         self.addSubview(self.nameLabel)
         self.addSubview(self.statusLabel)
         self.addSubview(self.button)
         self.addSubview(self.textField)
-        
-        self.imageView.frame = CGRect(x: 16,
-                                      y: 16,
-                                      width: 160,
-                                      height: 160)
-        self.nameLabel.frame = CGRect(x: 177,
-                                      y: 27,
-                                      width: 198,
-                                      height: 21)
-        self.statusLabel.frame = CGRect(x: 180,
-                                        y: 80,
-                                        width: 198,
-                                        height: 40)
-        self.button.frame = CGRect(x: 16,
-                                   y: 186,
-                                   width: 358, // расстояние слева справа по 16
-                                   height: 50)
-        self.textField.frame = CGRect(x: 180,
-                                      y: 130,
-                                      width: 198,
-                                      height: 40)
+        self.addSubview(self.buttonNew)
         
     }
     
+    public func addConstraint() {
+        button.translatesAutoresizingMaskIntoConstraints = false
+        buttonNew.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            //button
+            button.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            button.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            button.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -5),
+            button.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
+            //            button.heightAnchor.constraint(equalToConstant: 50),
+            // nameLabel
+            nameLabel.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            nameLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 27),
+            nameLabel.heightAnchor.constraint(equalToConstant: 40),
+            nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 1),
+            // imageView
+            imageView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
+            imageView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            imageView.heightAnchor.constraint(equalToConstant: 140),
+            imageView.widthAnchor.constraint(equalToConstant: 140),
+            // textField
+            textField.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            textField.bottomAnchor.constraint(equalTo: button.safeAreaLayoutGuide.topAnchor, constant: -34),
+            textField.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 1),
+            textField.heightAnchor.constraint(equalToConstant: 40),
+            // statusLabel
+            statusLabel.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            statusLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 5),
+            statusLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
+            statusLabel.heightAnchor.constraint(equalToConstant: 40),
+            //buttonNew
+//            buttonNew.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+//            buttonNew.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
+//            buttonNew.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
 }
+//        self.imageView.frame = CGRect(x: 16,
+//                                      y: 16,
+//                                      width: 160,
+//                                      height: 160)
+//        self.nameLabel.frame = CGRect(x: 177,
+//                                      y: 27,
+//                                      width: 198,
+//                                      height: 21)
+//        self.statusLabel.frame = CGRect(x: 180,
+//                                        y: 80,
+//                                        width: 198,
+//                                        height: 40)
+//        self.button.frame = CGRect(x: 16,
+//                                   y: 150,
+//                                   width: 358, // расстояние слева справа по 16
+//                                   height: 50)
+//        self.textField.frame = CGRect(x: 180,
+//                                      y: 130,
+//                                      width: 198,
+//                                      height: 40)
+
+
 

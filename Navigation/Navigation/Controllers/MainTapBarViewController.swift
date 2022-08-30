@@ -25,11 +25,10 @@ class MainTabBarController: UITabBarController {
     func createNavController(vc: UIViewController, itemName: String, itemImage: String) -> UINavigationController {
         
         let item = UITabBarItem(title: itemName, image: UIImage(systemName: itemImage)?.withAlignmentRectInsets(.init(top: 10, left: 0, bottom: 0, right: 0)), tag: 0)
-        UITabBar.appearance().unselectedItemTintColor = UIColor.white
-        item.titlePositionAdjustment = .init(horizontal: 0, vertical: 10)
-        UITabBar.appearance().barTintColor = .systemBackground
-        let navController = UINavigationController(rootViewController: vc)
         
+        item.titlePositionAdjustment = .init(horizontal: 0, vertical: 10)
+        UITabBar.appearance().barTintColor = .white
+        let navController = UINavigationController(rootViewController: vc)
         navController.tabBarItem = item
         return navController
     }
