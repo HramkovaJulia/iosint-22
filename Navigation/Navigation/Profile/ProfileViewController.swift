@@ -19,8 +19,7 @@ class ProfileViewController: UIViewController {
         self.navigationItem.title = "Profile"
         self.view.backgroundColor = .white
         addConstraintsView()
-        profileHeader.addConstraint() // фун-ция которая создает констрейнты
-        
+
         let gesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
         self.view.addGestureRecognizer(gesture)
         
@@ -37,11 +36,8 @@ class ProfileViewController: UIViewController {
            
         ])
     }
-//                    self.profileHeader.frame = CGRect(x: 0, y: 100, width: self.view.bounds.width, height: self.view.bounds.height)
 
     @objc private func handleTap() {
         self.view.endEditing(true)
-        
     }
-    
 }
