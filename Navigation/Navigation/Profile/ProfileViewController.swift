@@ -9,11 +9,11 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
-    private lazy var profileHeader: ProfileHeaderView = {
+    public lazy var profileHeader: ProfileHeaderView = {
         let view = ProfileHeaderView()
         return view
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Profile"
@@ -24,6 +24,7 @@ class ProfileViewController: UIViewController {
         self.view.addGestureRecognizer(gesture)
         
     }
+    
     private func addConstraintsView(){
         profileHeader.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(profileHeader)
@@ -36,6 +37,7 @@ class ProfileViewController: UIViewController {
            
         ])
     }
+  
 
     @objc private func handleTap() {
         self.view.endEditing(true)

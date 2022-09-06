@@ -17,7 +17,7 @@ class MainTabBarController: UITabBarController {
     func setupTapBar() {
         
         let feedViewController = createNavController(vc: FeedViewController(), itemName: "Feed", itemImage: "text.badge.checkmark")
-        let profileViewController = createNavController(vc: ProfileViewController(), itemName: "Profile", itemImage: "rectangle.stack.person.crop")
+        let profileViewController = createNavController(vc: LogInViewController(), itemName: "Profile", itemImage: "rectangle.stack.person.crop")
         
         viewControllers = [feedViewController, profileViewController]
     }
