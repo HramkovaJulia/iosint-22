@@ -25,6 +25,10 @@ class ProfileViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.showNavigationBar() 
+    }
+    
     private func addConstraintsView(){
         profileHeader.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(profileHeader)
@@ -41,5 +45,14 @@ class ProfileViewController: UIViewController {
 
     @objc private func handleTap() {
         self.view.endEditing(true)
+    }
+}
+extension ProfileViewController {
+    func hideNavigationBar() {
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+
+    func showNavigationBar() {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
 }

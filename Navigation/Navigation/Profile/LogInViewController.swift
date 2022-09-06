@@ -10,22 +10,32 @@ import UIKit
 class LogInViewController: UIViewController {
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        self.hideNavigationBar()
         view.addSubview(scrollView)
         programSetup()
         addConstraint()
         
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
-        self.view.addGestureRecognizer(gesture)
     }
     
-    private lazy var scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height))
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.showsHorizontalScrollIndicator = false
         scrollView.backgroundColor = .white
-        scrollView.contentSize = CGSize(width: view.frame.size.width, height: 2200)
-    }
+        
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return scrollView
+    }()
+    
+    private lazy var contentView: UIView = {
+        let contentView = UIView()
+        contentView.backgroundColor = .white
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return contentView
+    }()
     
     private lazy var imageView: UIImageView = {
         
@@ -48,13 +58,18 @@ class LogInViewController: UIViewController {
         return buttonLogIn
     }()
     
-    private lazy var textFieldName: UITextField = {
+    private lazy var textFieldName: UITextField = { [unowned self] in
         let textFieldName = UITextField()
         textFieldName.placeholder = "Email or phone"
         textFieldName.backgroundColor = #colorLiteral(red: 0.949019134, green: 0.9490200877, blue: 0.9705254436, alpha: 1)
         textFieldName.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         textFieldName.returnKeyType = .done
         textFieldName.borderStyle = UITextField.BorderStyle.roundedRect
+        textFieldName.autocorrectionType = UITextAutocorrectionType.no
+        textFieldName.keyboardType = UIKeyboardType.default
+        textFieldName.returnKeyType = UIReturnKeyType.done
+        textFieldName.clearButtonMode = UITextField.ViewMode.whileEditing
+        textFieldName.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         textFieldName.layer.borderColor = UIColor.lightGray.cgColor
         textFieldName.layer.cornerRadius = 10
         textFieldName.layer.borderWidth = 0.5
@@ -63,17 +78,25 @@ class LogInViewController: UIViewController {
         textFieldName.translatesAutoresizingMaskIntoConstraints = false
         textFieldName.autocapitalizationType = .none
         
+        textFieldName.delegate = self
+
+        
         return textFieldName
         
     }()
     
-    private lazy var textFieldPassword: UITextField = {
+    private lazy var textFieldPassword: UITextField = { [unowned self] in
         let textFieldPassword = UITextField()
         textFieldPassword.placeholder = "Password"
         textFieldPassword.backgroundColor = #colorLiteral(red: 0.949019134, green: 0.9490200877, blue: 0.9705254436, alpha: 1)
         textFieldPassword.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         textFieldPassword.returnKeyType = .done
         textFieldPassword.borderStyle = UITextField.BorderStyle.roundedRect
+        textFieldPassword.autocorrectionType = UITextAutocorrectionType.no
+        textFieldPassword.keyboardType = UIKeyboardType.default
+        textFieldPassword.returnKeyType = UIReturnKeyType.done
+        textFieldPassword.clearButtonMode = UITextField.ViewMode.whileEditing
+        textFieldPassword.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         textFieldPassword.layer.borderColor = UIColor.lightGray.cgColor
         textFieldPassword.layer.cornerRadius = 10
         textFieldPassword.layer.borderWidth = 0.5
@@ -83,31 +106,27 @@ class LogInViewController: UIViewController {
         textFieldPassword.translatesAutoresizingMaskIntoConstraints = false
         textFieldPassword.autocapitalizationType = .none
         
+        textFieldPassword.delegate = self
+        
         return textFieldPassword
         
     }()
     
     private func programSetup() {
-        scrollView.addSubview(imageView)
-        scrollView.addSubview(buttonLogIn)
-        scrollView.addSubview(textFieldName)
-        scrollView.addSubview(textFieldPassword)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(imageView)
+        contentView.addSubview(buttonLogIn)
+        contentView.addSubview(textFieldName)
+        contentView.addSubview(textFieldPassword)
    
     }
     
-    @objc private func handleTap() {
-        self.view.endEditing(true)
-    }
-    
-   
-   
     @objc func buttonProfileHeader() {
         let profileViewController = ProfileViewController()
         self.navigationController?.pushViewController(profileViewController, animated: true)
 //        postViewController.titlePost = post.title
     }
 
-    
     private func addConstraint() {
        
         
@@ -133,7 +152,84 @@ class LogInViewController: UIViewController {
             buttonLogIn.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             buttonLogIn.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
             buttonLogIn.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            //scrollView
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            //contentView
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setupKeyboardObservers()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        removeKeyboardObservers()
+    }
+    
+    // MARK: - Actions
+    
+    @objc func willShowKeyboard(_ notification: NSNotification) {
+        let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
+        scrollView.contentInset.bottom += keyboardHeight ?? 0.0
+    }
+    
+    @objc func willHideKeyboard(_ notification: NSNotification) {
+        scrollView.contentInset.bottom = 0.0
+    }
+    
+    private func setupKeyboardObservers() {
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(self.willShowKeyboard(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(self.willHideKeyboard(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+    
+    private func removeKeyboardObservers() {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.removeObserver(self)
+    }
+}
 
+extension LogInViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(
+        _ textField: UITextField
+    ) -> Bool {
+        textField.resignFirstResponder()
+        
+        return true
+    }
+
+}
+extension LogInViewController {
+    func hideNavigationBar() {
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+
+    func showNavigationBar() {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
 }
