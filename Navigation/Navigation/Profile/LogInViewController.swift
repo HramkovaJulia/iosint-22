@@ -1,3 +1,4 @@
+
 //
 //  LogInViewController.swift
 //  Navigation
@@ -7,23 +8,39 @@
 
 import UIKit
 
-class LogInViewController: UIViewController {
+class LogInViewController: UIViewController, UITextFieldDelegate {
     
+    //MARK: Lifecicle
     override func viewDidLoad() {
-        self.hideNavigationBar()
-        view.addSubview(scrollView)
+        
         programSetup()
         addConstraint()
         
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
+        self.view.addGestureRecognizer(gesture)
+        
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        setupKeyboardHiding()
+        view.backgroundColor = .white
+        self.tabBarController?.tabBar.backgroundColor = #colorLiteral(red: 0.9607843757, green: 0.9607843757, blue: 0.9607843757, alpha: 1)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        removeKeyboardObservers()
+    }
+    
+    //MARK: Subviews
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         
         scrollView.showsVerticalScrollIndicator = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.backgroundColor = .white
-        
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         
         return scrollView
@@ -54,32 +71,31 @@ class LogInViewController: UIViewController {
         buttonLogIn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         buttonLogIn.translatesAutoresizingMaskIntoConstraints = false
         buttonLogIn.addTarget(self, action: #selector(buttonProfileHeader), for: .touchUpInside)
-
+        
         return buttonLogIn
     }()
     
     private lazy var textFieldName: UITextField = { [unowned self] in
         let textFieldName = UITextField()
+        
         textFieldName.placeholder = "Email or phone"
-        textFieldName.backgroundColor = #colorLiteral(red: 0.949019134, green: 0.9490200877, blue: 0.9705254436, alpha: 1)
+        textFieldName.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textFieldName.frame.height))
+        textFieldName.leftViewMode = .always
+        textFieldName.textColor = .black
         textFieldName.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        textFieldName.returnKeyType = .done
-        textFieldName.borderStyle = UITextField.BorderStyle.roundedRect
-        textFieldName.autocorrectionType = UITextAutocorrectionType.no
-        textFieldName.keyboardType = UIKeyboardType.default
-        textFieldName.returnKeyType = UIReturnKeyType.done
-        textFieldName.clearButtonMode = UITextField.ViewMode.whileEditing
-        textFieldName.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        textFieldName.layer.borderColor = UIColor.lightGray.cgColor
-        textFieldName.layer.cornerRadius = 10
-        textFieldName.layer.borderWidth = 0.5
-        textFieldName.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        textFieldName.becomeFirstResponder()
-        textFieldName.translatesAutoresizingMaskIntoConstraints = false
+        textFieldName.tintColor = UIColor(named: "AccentColor")
         textFieldName.autocapitalizationType = .none
+        textFieldName.backgroundColor = .systemGray6
+        
+        textFieldName.layer.borderColor = UIColor.lightGray.cgColor
+        textFieldName.layer.borderWidth = 0.5
+        textFieldName.returnKeyType = UIReturnKeyType.done
+        textFieldName.autocorrectionType = .no
+        textFieldName.keyboardType = .namePhonePad
+        textFieldName.translatesAutoresizingMaskIntoConstraints = false
         
         textFieldName.delegate = self
-
+        
         
         return textFieldName
         
@@ -87,24 +103,23 @@ class LogInViewController: UIViewController {
     
     private lazy var textFieldPassword: UITextField = { [unowned self] in
         let textFieldPassword = UITextField()
+        
         textFieldPassword.placeholder = "Password"
-        textFieldPassword.backgroundColor = #colorLiteral(red: 0.949019134, green: 0.9490200877, blue: 0.9705254436, alpha: 1)
+        textFieldPassword.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textFieldPassword.frame.height))
+        textFieldPassword.leftViewMode = .always
+        textFieldPassword.textColor = .black
         textFieldPassword.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-        textFieldPassword.returnKeyType = .done
-        textFieldPassword.borderStyle = UITextField.BorderStyle.roundedRect
-        textFieldPassword.autocorrectionType = UITextAutocorrectionType.no
-        textFieldPassword.keyboardType = UIKeyboardType.default
-        textFieldPassword.returnKeyType = UIReturnKeyType.done
-        textFieldPassword.clearButtonMode = UITextField.ViewMode.whileEditing
-        textFieldPassword.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
+        textFieldPassword.tintColor = UIColor(named: "AccentColor")
+        textFieldPassword.autocapitalizationType = .none
+        textFieldPassword.backgroundColor = .systemGray6
+        
         textFieldPassword.layer.borderColor = UIColor.lightGray.cgColor
-        textFieldPassword.layer.cornerRadius = 10
         textFieldPassword.layer.borderWidth = 0.5
-        textFieldPassword.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-        textFieldPassword.becomeFirstResponder()
+        textFieldPassword.returnKeyType = UIReturnKeyType.done
+        textFieldPassword.autocorrectionType = .no
+        textFieldPassword.keyboardType = .namePhonePad
         textFieldPassword.isSecureTextEntry = true
         textFieldPassword.translatesAutoresizingMaskIntoConstraints = false
-        textFieldPassword.autocapitalizationType = .none
         
         textFieldPassword.delegate = self
         
@@ -112,124 +127,117 @@ class LogInViewController: UIViewController {
         
     }()
     
+    private lazy var stackView: UIStackView = {
+        
+        let stackView = UIStackView()
+        stackView.layer.cornerRadius = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.clipsToBounds = true
+        
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.alignment = .fill
+        
+        stackView.addArrangedSubview(textFieldName)
+        stackView.addArrangedSubview(textFieldPassword)
+        
+        return stackView
+    }()
+    //MARK: func
+    
     private func programSetup() {
+        view.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        contentView.addSubview(stackView)
         contentView.addSubview(imageView)
         contentView.addSubview(buttonLogIn)
-        contentView.addSubview(textFieldName)
-        contentView.addSubview(textFieldPassword)
-   
+        
     }
     
     @objc func buttonProfileHeader() {
+        
         let profileViewController = ProfileViewController()
         self.navigationController?.pushViewController(profileViewController, animated: true)
-//        postViewController.titlePost = post.title
-    }
-
-    private func addConstraint() {
-       
         
-        NSLayoutConstraint.activate([
-            // imageView
-            imageView.topAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.topAnchor, constant: 120),
-            imageView.heightAnchor.constraint(equalToConstant: 100),
-            imageView.widthAnchor.constraint(equalToConstant: 100),
-            imageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            //textFieldName
-            textFieldName.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 120),
-            textFieldName.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            textFieldName.heightAnchor.constraint(equalToConstant: 50),
-            textFieldName.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            //textFieldPassword
-            textFieldPassword.topAnchor.constraint(equalTo: textFieldName.bottomAnchor),
-            textFieldPassword.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            textFieldPassword.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            textFieldPassword.heightAnchor.constraint(equalToConstant: 50),
-//            buttonLogIn
-            buttonLogIn.topAnchor.constraint(equalTo: textFieldPassword.bottomAnchor, constant: 16),
-            buttonLogIn.heightAnchor.constraint(equalToConstant: 50),
-            buttonLogIn.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            buttonLogIn.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            buttonLogIn.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            //scrollView
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            //contentView
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        setupKeyboardObservers()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        removeKeyboardObservers()
     }
     
     // MARK: - Actions
     
-    @objc func willShowKeyboard(_ notification: NSNotification) {
+    @objc func keyboardWillShow(_ notification: NSNotification) {
         let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
         scrollView.contentInset.bottom += keyboardHeight ?? 0.0
     }
     
-    @objc func willHideKeyboard(_ notification: NSNotification) {
+    @objc  func keyboardWillHide(_ notification: NSNotification) {
         scrollView.contentInset.bottom = 0.0
     }
     
-    private func setupKeyboardObservers() {
-        let notificationCenter = NotificationCenter.default
+    private func addConstraint() {
+        let safeAreaGuide = view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            
+            scrollView.leadingAnchor.constraint(equalTo: safeAreaGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: safeAreaGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: safeAreaGuide.bottomAnchor),
+            
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 120),
+            imageView.heightAnchor.constraint(equalToConstant: 100),
+            imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 100),
+            
+            stackView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 120),
+            stackView.heightAnchor.constraint(equalToConstant: 100),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            
+            
+            buttonLogIn.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 16),
+            buttonLogIn.heightAnchor.constraint(equalToConstant: 50),
+            buttonLogIn.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            buttonLogIn.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+        ])
         
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(self.willShowKeyboard(_:)),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(self.willHideKeyboard(_:)),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
+        contentView.subviews.last?.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+    }
+    
+    private func setupKeyboardHiding() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func removeKeyboardObservers() {
         let notificationCenter = NotificationCenter.default
         notificationCenter.removeObserver(self)
     }
-}
-
-extension LogInViewController: UITextFieldDelegate {
-    
-    func textFieldShouldReturn(
-        _ textField: UITextField
-    ) -> Bool {
-        textFieldName.resignFirstResponder()
-        textFieldPassword.resignFirstResponder()
-        return true
+//    После нажатия Done клава исчезает 
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+        
     }
-
-}
-extension LogInViewController {
-    func hideNavigationBar() {
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
-    }
-
-    func showNavigationBar() {
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    //
+    @objc private func handleTap() {
+        self.view.endEditing(true)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
