@@ -58,13 +58,15 @@ class ProfileHeaderView: UIView {
     private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Enter your status ..."
+        textField.borderStyle = UITextField.BorderStyle.roundedRect
         textField.textColor = .lightGray
         textField.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         textField.clearButtonMode = .whileEditing // Кнопка «Очистить» при редактировании
         textField.clearButtonMode = .always // Всегда показывать кнопку очистки
-        
+//        textField.layer.borderColor = UIColor.black.cgColor
+//        textField.layer.borderWidth = 1
         textField.returnKeyType = .done
-        textField.borderStyle = UITextField.BorderStyle.roundedRect
+
         textField.becomeFirstResponder()
         
         return textField
