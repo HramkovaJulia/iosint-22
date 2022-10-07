@@ -6,6 +6,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - Data
     
     fileprivate let data = Post.make()
+    
     // MARK: - Subviews
     
     public lazy var tableView: UITableView = {
@@ -13,10 +14,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             frame: .zero,
             style: .grouped
         )
-        tableView.register(
-            PostTableViewCell.self,
-            forCellReuseIdentifier: PostTableViewCell.identifier
-        )
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         return tableView
@@ -24,58 +22,68 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     override func viewDidLoad() {
-        addSubview()
-        tuneTableView()
-        setupConstraints()
+        self.navigationController?.navigationBar.isHidden = false
+        view.addSubview(tableView)
         view.backgroundColor = .white
+        tuneTableView()
+   
+        
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLoad()
+        tableView.frame = view.bounds
+        
     }
     
-    private func setupConstraints() {
-        
-        NSLayoutConstraint.activate([
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-    }
- 
+    
     private enum HeaderFooterReuseID: String {
         case base = "TableSectionFooterHeaderView_ReuseID"
     }
+    
     
     private func tuneTableView() {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .systemGray6
         
-        let headerView = ProfileTableHeaderView()
-        tableView.setAndLayout(headerView: headerView)
-        tableView.tableFooterView = UIView()
-        
         tableView.register(
             ProfileTableHeaderView.self,
-            forHeaderFooterViewReuseIdentifier: HeaderFooterReuseID.base.rawValue
+            forHeaderFooterViewReuseIdentifier: "header"
         )
-        
-        tableView.dataSource = self
-        tableView.delegate = self
-        
+        tableView.register(
+            PostTableViewCell.self,
+            forCellReuseIdentifier: PostTableViewCell.identifier
+        )
+        tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.identifier)
+      
     }
-    
-    func addSubview() {
-        view.addSubview(tableView)
-    }
-    
     
     //MARK: UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         2
     }
+    
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        data.count
+        if section == 0 {return 1}
+            else {return data.count}
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? ProfileTableHeaderView
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 220.0
+        } else {
+           return 0
+        }
     }
     
     // экземляр который мы создаем для ячейки
@@ -83,41 +91,45 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        
-        
-       guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: PostTableViewCell.identifier,
-            for: indexPath
-        ) as? PostTableViewCell else {
-            fatalError("could not dequeueReusableCell")
+        if indexPath.section == 0  {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "PhotosTableViewCell", for: indexPath) as? PhotosTableViewCell else {
+                fatalError("could not dequeueReusableCell")
+            }
+            
+            return cell
+            
         }
-        cell.update(data[indexPath.row])
-      
- 
-        return cell
+            guard let cell = tableView.dequeueReusableCell(
+                          withIdentifier: PostTableViewCell.identifier,
+                          for: indexPath
+                      ) as? PostTableViewCell else {
+                          fatalError("could not dequeueReusableCell")
+                      }
+                      cell.update(data[indexPath.row])
+          
+                      return cell
+           
+            }
+
+        
+    func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
+        if indexPath.section == 0 {
+            
+            let nextViewController = PhotosViewController()
+            navigationController?.navigationBar.isHidden = false
+            navigationController?.pushViewController(
+                nextViewController, animated: true
+                
+            )
+        }
     }
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 600
-//    }
-}
-
-extension UITableView {
     
-    // @link https://stackoverflow.com/a/28102175
-    
-    func setAndLayout(headerView: UIView) {
-        tableHeaderView = headerView
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            headerView.widthAnchor.constraint(equalTo: widthAnchor)
-        ])
-        
-        headerView.setNeedsLayout()
-        headerView.layoutIfNeeded()
-        headerView.frame.size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-    }
 }
-
+    
+    
+    
 

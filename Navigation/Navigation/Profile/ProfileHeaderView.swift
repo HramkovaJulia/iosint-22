@@ -9,7 +9,16 @@ import UIKit
 
 class ProfileHeaderView: UIView {
     
-    private lazy var imageView: UIImageView = {
+//    lazy  var newView: UIView = {
+//        let newView = UIView()
+//        newView.backgroundColor = .systemGray6
+//        newView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        newView.backgroundColor = .red
+//        return newView
+//    }()
+    
+    public lazy var imageView: UIImageView = {
         
         let imageView = UIImageView(image: UIImage(named: "guest"))
         
@@ -17,6 +26,7 @@ class ProfileHeaderView: UIView {
         imageView.clipsToBounds = true
         imageView.layer.borderColor = UIColor.white.cgColor // цвет рамки
         imageView.layer.borderWidth = 3 // толщина рамки
+        
         return imageView
     }()
     
@@ -77,10 +87,41 @@ class ProfileHeaderView: UIView {
         super.init(frame: frame)
         self.programmSetup()
         self.addConstraint()
+        
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapOnImage(_ :) ))
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(tapGestureRecognizer)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func tapOnImage(_ : UITapGestureRecognizer) {
+        let vc = ProfileViewController()
+        let window = UIApplication.shared.keyWindow!
+        let v = UIView(frame: window.bounds)
+        
+        window.addSubview(v);
+        v.backgroundColor = UIColor.white
+        v.alpha = 0.8 // прозрачность моего вью
+        v.isOpaque = false
+        UIView.animate(withDuration: 0.5) {
+            window.addSubview(self.imageView)
+            
+            self.layer.masksToBounds = false
+            self.imageView.clipsToBounds = true
+            self.imageView.layer.cornerRadius = 60
+            NSLayoutConstraint.activate([
+                self.imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+                self.imageView.centerYAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerYAnchor),
+                self.imageView.heightAnchor.constraint(equalToConstant: 120),
+                self.imageView.widthAnchor.constraint(equalTo: self.imageView.heightAnchor),
+            ])
+            print("OK")
+        }
+        
     }
     
     @objc private func buttonTaped(sender: UIButton!) {
@@ -100,7 +141,7 @@ class ProfileHeaderView: UIView {
         self.addSubview(self.statusLabel)
         self.addSubview(self.button)
         self.addSubview(self.textField)
-        
+
     }
     
     public func addConstraint() {
@@ -136,7 +177,7 @@ class ProfileHeaderView: UIView {
             statusLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 5),
             statusLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
             statusLabel.heightAnchor.constraint(equalToConstant: 30),
-          
+            
         ])
     }
 }

@@ -11,18 +11,10 @@ import UIKit
 class LogInViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: Lifecicle
-    override func viewDidLoad() {
-        
-        programSetup()
-        addConstraint()
-        
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
-        self.view.addGestureRecognizer(gesture)
-        
-    }
-    
+  
+
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.navigationController?.navigationBar.isHidden = true  
         setupKeyboardHiding()
         view.backgroundColor = .white
         self.tabBarController?.tabBar.backgroundColor = #colorLiteral(red: 0.9607843757, green: 0.9607843757, blue: 0.9607843757, alpha: 1)
@@ -54,12 +46,27 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         return contentView
     }()
     
+    override func viewDidLoad() {
+        
+        programSetup()
+        addConstraint()
+        
+       
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
+        self.view.addGestureRecognizer(gesture)
+        
+    }
+    
     private lazy var imageView: UIImageView = {
         
         let imageView = UIImageView(image: UIImage(named: "vk"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
+   
         return imageView
     }()
+    
+  
+
     
     private lazy var buttonLogIn: UIButton = {
         

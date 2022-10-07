@@ -109,9 +109,10 @@ class PostTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             labelAuthor.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            labelAuthor.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+//            labelAuthor.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             labelAuthor.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             labelAuthor.bottomAnchor.constraint(equalTo: postImage.topAnchor, constant: -12),
+            labelAuthor.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
             postImage.topAnchor.constraint(equalTo: labelAuthor.bottomAnchor, constant: 12),
             postImage.bottomAnchor.constraint(equalTo: postDescription.topAnchor, constant: -16),
