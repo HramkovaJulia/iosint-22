@@ -6,10 +6,10 @@
 //
 
 import UIKit
-
+import StorageService
 
 class PostTableViewCell: UITableViewCell {
-
+    
     static let identifier = "PostTableViewCell"
     private lazy var labelAuthor: UILabel = {
         let labelAuthor = UILabel()
@@ -56,15 +56,15 @@ class PostTableViewCell: UITableViewCell {
     
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
-    
+        
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
         stackView.alignment = .fill
         stackView.clipsToBounds = true
-
+        
         stackView.addArrangedSubview(numberOfShows)
         stackView.addArrangedSubview(numberOfLikes)
-
+        
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -109,7 +109,7 @@ class PostTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             labelAuthor.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-//            labelAuthor.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            labelAuthor.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             labelAuthor.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             labelAuthor.bottomAnchor.constraint(equalTo: postImage.topAnchor, constant: -12),
             labelAuthor.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
@@ -143,8 +143,8 @@ class PostTableViewCell: UITableViewCell {
     }
 }
 
-    
-    
-    
-    
+
+
+
+
 

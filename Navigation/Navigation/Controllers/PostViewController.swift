@@ -6,16 +6,14 @@
 //
 
 import UIKit
+import StorageService
 
 class PostViewController: UIViewController {
-    
-    var titlePost = NamePost(author: "Anonymous")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .lightGray
-//        title = titlePost
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
             target: self,

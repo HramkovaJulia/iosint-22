@@ -8,7 +8,7 @@
 import UIKit
 
 class PhotosCollectionViewCell: UICollectionViewCell {
-
+    
     private lazy var photoImage: UIImageView = {
         let photoImage = UIImageView(frame: .zero)
         photoImage.translatesAutoresizingMaskIntoConstraints = false
@@ -56,5 +56,5 @@ class PhotosCollectionViewCell: UICollectionViewCell {
     ) {
         photoImage.image = UIImage(named: model.image)
     }
-
+    
 }

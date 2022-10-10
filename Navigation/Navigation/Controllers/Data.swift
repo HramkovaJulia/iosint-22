@@ -7,21 +7,21 @@
 
 import Foundation
 
-struct NamePost {
+public struct NamePost {
     
-    var author: String
+   public var author: String
 }
 
-struct Post {
+public struct Post {
     
-    var author: String
-    var description: String
-    var image: String
-    var likes: Int
-    var views: Int
+    public var author: String
+    public var description: String
+    public var image: String
+    public  var likes: Int
+    public var views: Int
 }
 
-extension Post {
+public extension Post {
     static func make() -> [Post] {
         
         [Post(author: "Boris - Balinese cat", description: "Животные короткошерстных пород кошек стройнее и активнее длинношерстных. У большинства кошек по 4 когтя на задних лапах и по 5 на передних. Когти на передних лапах обычно острее, чем на задних.", image: "кот1", likes: 2043, views: 2533),

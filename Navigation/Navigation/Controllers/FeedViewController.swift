@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import StorageService
 
 class FeedViewController: UIViewController {
     
-    var post = NamePost(author: "Мой пост")
+//    var post = NamePost(author: "Мой пост")
     
     override func viewDidLoad() {
         
@@ -44,7 +45,7 @@ class FeedViewController: UIViewController {
     @objc private func buttonAction() {
         let postViewController = PostViewController()
         self.navigationController?.pushViewController(postViewController, animated: true)
-        postViewController.titlePost = post
+//        postViewController.titlePost = post
         
     }
     

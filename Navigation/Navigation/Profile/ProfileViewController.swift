@@ -1,13 +1,9 @@
 import UIKit
-
+import StorageService
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: - Data
-    
     fileprivate let data = Post.make()
-    
-    // MARK: - Subviews
     
     public lazy var tableView: UITableView = {
         let tableView = UITableView.init(
@@ -20,29 +16,31 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return tableView
     }()
     
-    
     override func viewDidLoad() {
         self.navigationController?.navigationBar.isHidden = false
         view.addSubview(tableView)
         view.backgroundColor = .white
         tuneTableView()
-   
         
+    #if (DEBUG)
+        self.view.backgroundColor = .blue
+    #else
+        self.view.backgroundColor = .red
+    #endif
         
         tableView.dataSource = self
         tableView.delegate = self
     }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLoad()
         tableView.frame = view.bounds
         
     }
     
-    
     private enum HeaderFooterReuseID: String {
         case base = "TableSectionFooterHeaderView_ReuseID"
     }
-    
     
     private func tuneTableView() {
         tableView.rowHeight = UITableView.automaticDimension
@@ -57,10 +55,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             forCellReuseIdentifier: PostTableViewCell.identifier
         )
         tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.identifier)
-      
+        
     }
     
-    //MARK: UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         2
     }
@@ -70,7 +67,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         numberOfRowsInSection section: Int
     ) -> Int {
         if section == 0 {return 1}
-            else {return data.count}
+        else {return data.count}
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -82,7 +79,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         if section == 0 {
             return 220.0
         } else {
-           return 0
+            return 0
         }
     }
     
@@ -99,19 +96,18 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             return cell
             
         }
-            guard let cell = tableView.dequeueReusableCell(
-                          withIdentifier: PostTableViewCell.identifier,
-                          for: indexPath
-                      ) as? PostTableViewCell else {
-                          fatalError("could not dequeueReusableCell")
-                      }
-                      cell.update(data[indexPath.row])
-          
-                      return cell
-           
-            }
-
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: PostTableViewCell.identifier,
+            for: indexPath
+        ) as? PostTableViewCell else {
+            fatalError("could not dequeueReusableCell")
+        }
+        cell.update(data[indexPath.row])
         
+        return cell
+        
+    }
+    
     func tableView(
         _ tableView: UITableView,
         didSelectRowAt indexPath: IndexPath
@@ -127,9 +123,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    
 }
-    
-    
-    
+
+
+
 

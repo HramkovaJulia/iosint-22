@@ -26,7 +26,7 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         self.addSubview(self.profileHeader)
         profileHeader.setNeedsLayout()
         profileHeader.layoutIfNeeded()
-//        profileHeader.frame.size = profileHeader.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        profileHeader.frame.size = profileHeader.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         NSLayoutConstraint.activate([
             // uiview
             profileHeader.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
@@ -34,10 +34,7 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
             profileHeader.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             profileHeader.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             
-            
-
         ])
-        
     }
     
     @objc private func handleTap() {
@@ -48,7 +45,7 @@ extension ProfileViewController {
     func hideNavigationBar() {
         self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
-
+    
     func showNavigationBar() {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }

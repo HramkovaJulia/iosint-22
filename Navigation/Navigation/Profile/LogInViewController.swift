@@ -10,9 +10,6 @@ import UIKit
 
 class LogInViewController: UIViewController, UITextFieldDelegate {
     
-    //MARK: Lifecicle
-  
-
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.isHidden = true  
         setupKeyboardHiding()
@@ -26,7 +23,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         removeKeyboardObservers()
     }
     
-    //MARK: Subviews
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         
@@ -51,7 +47,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         programSetup()
         addConstraint()
         
-       
         let gesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
         self.view.addGestureRecognizer(gesture)
         
@@ -61,12 +56,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         let imageView = UIImageView(image: UIImage(named: "vk"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
-   
+        
         return imageView
     }()
-    
-  
-
     
     private lazy var buttonLogIn: UIButton = {
         
@@ -165,10 +157,8 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         let profileViewController = ProfileViewController()
         self.navigationController?.pushViewController(profileViewController, animated: true)
-      
+        
     }
-    
-    // MARK: - Actions
     
     @objc func keyboardWillShow(_ notification: NSNotification) {
         let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
@@ -223,7 +213,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         let notificationCenter = NotificationCenter.default
         notificationCenter.removeObserver(self)
     }
-//    После нажатия Done клава исчезает 
+    //    После нажатия Done клава исчезает 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return false

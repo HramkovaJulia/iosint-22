@@ -9,12 +9,9 @@ import UIKit
 
 class PhotosViewController: UIViewController {
     
-    // MARK: - Data
-    
+  
     fileprivate lazy var photos: [ImageCollection] = ImageCollection.make()
     
-    // MARK: Subviews
-
     private enum CollectionCellReuseID: String {
         case base = "CollectionCellReuseID_ReuseID"
     }
@@ -50,8 +47,6 @@ class PhotosViewController: UIViewController {
         super.viewWillDisappear(animated)
         self.navigationController?.isNavigationBarHidden = true
     }
-    
-    // MARK: - Private
     
     private func setupView() {
         view.backgroundColor = .systemBackground
@@ -129,7 +124,7 @@ extension PhotosViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
         let width = itemWidth(
             for: view.frame.width,
-            spacing: 8
+               spacing: 8
         )
         
         return CGSize(width: width, height: width)
@@ -164,10 +159,10 @@ extension PhotosViewController: UICollectionViewDelegateFlowLayout {
         8
     }
 }
-    
- 
-    
-    
 
- 
+
+
+
+
+
 

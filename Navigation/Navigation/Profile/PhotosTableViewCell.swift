@@ -25,7 +25,7 @@ class PhotosTableViewCell: UITableViewCell {
         arrow.translatesAutoresizingMaskIntoConstraints = false
         let image = UIImage(systemName: "arrow.right")?.withTintColor(.black, renderingMode: .alwaysOriginal)
         arrow.image = image
-    
+        
         return arrow
     }()
     

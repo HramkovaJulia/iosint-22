@@ -8,16 +8,7 @@
 import UIKit
 
 class ProfileHeaderView: UIView {
-    
-//    lazy  var newView: UIView = {
-//        let newView = UIView()
-//        newView.backgroundColor = .systemGray6
-//        newView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        newView.backgroundColor = .red
-//        return newView
-//    }()
-    
+ 
     public lazy var imageView: UIImageView = {
         
         let imageView = UIImageView(image: UIImage(named: "guest"))
@@ -73,10 +64,10 @@ class ProfileHeaderView: UIView {
         textField.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         textField.clearButtonMode = .whileEditing // Кнопка «Очистить» при редактировании
         textField.clearButtonMode = .always // Всегда показывать кнопку очистки
-//        textField.layer.borderColor = UIColor.black.cgColor
-//        textField.layer.borderWidth = 1
+        //        textField.layer.borderColor = UIColor.black.cgColor
+        //        textField.layer.borderWidth = 1
         textField.returnKeyType = .done
-
+        
         textField.becomeFirstResponder()
         
         return textField
@@ -89,40 +80,39 @@ class ProfileHeaderView: UIView {
         self.addConstraint()
         
         
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapOnImage(_ :) ))
-        imageView.isUserInteractionEnabled = true
-        imageView.addGestureRecognizer(tapGestureRecognizer)
+        //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapOnImage(_ :) ))
+        //        imageView.isUserInteractionEnabled = true
+        //        imageView.addGestureRecognizer(tapGestureRecognizer)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func tapOnImage(_ : UITapGestureRecognizer) {
-        let vc = ProfileViewController()
-        let window = UIApplication.shared.keyWindow!
-        let v = UIView(frame: window.bounds)
-        
-        window.addSubview(v);
-        v.backgroundColor = UIColor.white
-        v.alpha = 0.8 // прозрачность моего вью
-        v.isOpaque = false
-        UIView.animate(withDuration: 0.5) {
-            window.addSubview(self.imageView)
-            
-            self.layer.masksToBounds = false
-            self.imageView.clipsToBounds = true
-            self.imageView.layer.cornerRadius = 60
-            NSLayoutConstraint.activate([
-                self.imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-                self.imageView.centerYAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerYAnchor),
-                self.imageView.heightAnchor.constraint(equalToConstant: 120),
-                self.imageView.widthAnchor.constraint(equalTo: self.imageView.heightAnchor),
-            ])
-            print("OK")
-        }
-        
-    }
+    //    @objc func tapOnImage(_ : UITapGestureRecognizer) {
+    //        let window = UIApplication.shared.keyWindow!
+    //        let v = UIView(frame: window.bounds)
+    //
+    //        window.addSubview(v);
+    //        v.backgroundColor = UIColor.white
+    //        v.alpha = 0.8 // прозрачность моего вью
+    //        v.isOpaque = false
+    //        UIView.animate(withDuration: 0.5) {
+    //            window.addSubview(self.imageView)
+    //
+    //            self.layer.masksToBounds = false
+    //            self.imageView.clipsToBounds = true
+    //            self.imageView.layer.cornerRadius = 60
+    //            NSLayoutConstraint.activate([
+    //                self.imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+    //                self.imageView.centerYAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerYAnchor),
+    //                self.imageView.heightAnchor.constraint(equalToConstant: 120),
+    //                self.imageView.widthAnchor.constraint(equalTo: self.imageView.heightAnchor),
+    //            ])
+    //            print("OK")
+    //        }
+    //
+    //    }
     
     @objc private func buttonTaped(sender: UIButton!) {
         guard textField.text?.isEmpty == false else { return }
@@ -141,7 +131,7 @@ class ProfileHeaderView: UIView {
         self.addSubview(self.statusLabel)
         self.addSubview(self.button)
         self.addSubview(self.textField)
-
+        
     }
     
     public func addConstraint() {
