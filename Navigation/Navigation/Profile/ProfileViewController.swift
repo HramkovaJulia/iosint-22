@@ -21,6 +21,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         view.addSubview(tableView)
         view.backgroundColor = .white
         tuneTableView()
+        setupConstraints()
         
     #if (DEBUG)
         self.view.backgroundColor = .blue
@@ -32,14 +33,21 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.delegate = self
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLoad()
-        tableView.frame = view.bounds
-        
-    }
     
     private enum HeaderFooterReuseID: String {
         case base = "TableSectionFooterHeaderView_ReuseID"
+    }
+    
+    private func setupConstraints() {
+        
+        let safeArea = view.safeAreaLayoutGuide
+        
+        NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+        ])
     }
     
     private func tuneTableView() {
