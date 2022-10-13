@@ -6,10 +6,10 @@
 //
 
 import UIKit
-
+import StorageService
 
 class PostTableViewCell: UITableViewCell {
-
+    
     static let identifier = "PostTableViewCell"
     private lazy var labelAuthor: UILabel = {
         let labelAuthor = UILabel()
@@ -56,15 +56,15 @@ class PostTableViewCell: UITableViewCell {
     
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
-    
+        
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
         stackView.alignment = .fill
         stackView.clipsToBounds = true
-
+        
         stackView.addArrangedSubview(numberOfShows)
         stackView.addArrangedSubview(numberOfLikes)
-
+        
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -108,25 +108,26 @@ class PostTableViewCell: UITableViewCell {
     private func setupConstraints() {
         
         NSLayoutConstraint.activate([
-            labelAuthor.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            labelAuthor.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
-            labelAuthor.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            labelAuthor.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            labelAuthor.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            labelAuthor.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             labelAuthor.bottomAnchor.constraint(equalTo: postImage.topAnchor, constant: -12),
-          
+            labelAuthor.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            
             postImage.topAnchor.constraint(equalTo: labelAuthor.bottomAnchor, constant: 12),
-            postImage.bottomAnchor.constraint(equalTo: postDescription.topAnchor, constant: -12),
+            postImage.bottomAnchor.constraint(equalTo: postDescription.topAnchor, constant: -16),
             postImage.widthAnchor.constraint(equalTo: contentView.widthAnchor),
             postImage.heightAnchor.constraint(equalTo: contentView.widthAnchor),
             
-            postDescription.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 12),
-            postDescription.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -12),
-            postDescription.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
-            postDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            postDescription.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 16),
+            postDescription.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -16),
+            postDescription.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            postDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
-            stackView.topAnchor.constraint(equalTo: postDescription.bottomAnchor, constant: 12),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            stackView.topAnchor.constraint(equalTo: postDescription.bottomAnchor, constant: 16),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
         ])
     }
     
@@ -142,8 +143,8 @@ class PostTableViewCell: UITableViewCell {
     }
 }
 
-    
-    
-    
-    
+
+
+
+
 

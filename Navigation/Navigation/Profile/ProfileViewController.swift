@@ -1,138 +1,114 @@
-import UIKit
-import StorageService
+//
+//  ProfileViewController.swift
+//  Navigation
+//
 
-class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+import UIKit
+
+final class ProfileViewController: UIViewController {
     
-    fileprivate let data = Post.make()
+    static let headerIdent = "header"
+    static let photoIdent = "photo"
+    static let postIdent = "post"
     
-    public lazy var tableView: UITableView = {
-        let tableView = UITableView.init(
-            frame: .zero,
-            style: .grouped
-        )
-        
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return tableView
+    static var postTableView: UITableView = {
+        let table = UITableView(frame: .zero, style: .grouped)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.register(ProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: headerIdent)
+        table.register(PhotosTableViewCell.self, forCellReuseIdentifier: photoIdent)
+        table.register(PostTableViewCell.self, forCellReuseIdentifier: postIdent)
+        return table
     }()
     
+    // MARK: - Setup section
+    
     override func viewDidLoad() {
-        self.navigationController?.navigationBar.isHidden = false
-        view.addSubview(tableView)
-        view.backgroundColor = .white
-        tuneTableView()
+        super.viewDidLoad()
+
+        view.backgroundColor = .systemBackground
+        
+        view.addSubview(Self.postTableView)
         setupConstraints()
-        
-    #if (DEBUG)
-        self.view.backgroundColor = .blue
-    #else
-        self.view.backgroundColor = .red
-    #endif
-        
-        tableView.dataSource = self
-        tableView.delegate = self
-    }
-    
-    
-    private enum HeaderFooterReuseID: String {
-        case base = "TableSectionFooterHeaderView_ReuseID"
+        Self.postTableView.dataSource = self
+        Self.postTableView.delegate = self
+        Self.postTableView.refreshControl = UIRefreshControl()
+        Self.postTableView.refreshControl?.addTarget(self, action: #selector(reloadTableView), for: .valueChanged)
     }
     
     private func setupConstraints() {
-        
-        let safeArea = view.safeAreaLayoutGuide
-        
         NSLayoutConstraint.activate([
-            tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            Self.postTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            Self.postTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            Self.postTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            Self.postTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-    
-    private func tuneTableView() {
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.backgroundColor = .systemGray6
-        
-        tableView.register(
-            ProfileTableHeaderView.self,
-            forHeaderFooterViewReuseIdentifier: "header"
-        )
-        tableView.register(
-            PostTableViewCell.self,
-            forCellReuseIdentifier: PostTableViewCell.identifier
-        )
-        tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.identifier)
-        
+
+    @objc func reloadTableView() {
+        Self.postTableView.reloadData()
+        Self.postTableView.refreshControl?.endRefreshing()
     }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        2
-    }
-    
-    func tableView(
-        _ tableView: UITableView,
-        numberOfRowsInSection section: Int
-    ) -> Int {
-        if section == 0 {return 1}
-        else {return data.count}
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? ProfileTableHeaderView
-        return header
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 220.0
-        } else {
-            return 0
-        }
-    }
-    
-    // экземляр который мы создаем для ячейки
-    func tableView(
-        _ tableView: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
-        if indexPath.section == 0  {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "PhotosTableViewCell", for: indexPath) as? PhotosTableViewCell else {
-                fatalError("could not dequeueReusableCell")
-            }
-            
-            return cell
-            
-        }
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: PostTableViewCell.identifier,
-            for: indexPath
-        ) as? PostTableViewCell else {
-            fatalError("could not dequeueReusableCell")
-        }
-        cell.update(data[indexPath.row])
-        
-        return cell
-        
-    }
-    
-    func tableView(
-        _ tableView: UITableView,
-        didSelectRowAt indexPath: IndexPath
-    ) {
-        if indexPath.section == 0 {
-            
-            let nextViewController = PhotosViewController()
-            navigationController?.navigationBar.isHidden = false
-            navigationController?.pushViewController(
-                nextViewController, animated: true
-                
-            )
-        }
-    }
-    
 }
 
+// MARK: - Extensions
 
+extension ProfileViewController: UITableViewDataSource {
 
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0: return 1
+        case 1: return postExamples.count
+        default:
+            assertionFailure("no registered section")
+            return 1
+        }
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+}
+
+extension ProfileViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            let cell = Self.postTableView.dequeueReusableCell(withIdentifier: Self.photoIdent, for: indexPath) as! PhotosTableViewCell
+            return cell
+        case 1:
+            let cell = Self.postTableView.dequeueReusableCell(withIdentifier: Self.postIdent, for: indexPath) as! PostTableViewCell
+            cell.configPostArray(post: postExamples[indexPath.row])
+            return cell
+        default:
+            assertionFailure("no registered section")
+            return UITableViewCell()
+        }
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard section == 0 else { return nil }
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Self.headerIdent) as! ProfileHeaderView
+        return headerView
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return section == 0 ? 220 : 0
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            tableView.deselectRow(at: indexPath, animated: false)
+            navigationController?.pushViewController(PhotosViewController(), animated: true)
+        case 1:
+            guard let cell = tableView.cellForRow(at: indexPath) else { return }
+            if let post = cell as? PostTableViewCell {
+                post.incrementPostViewsCounter()
+            }
+        default:
+            assertionFailure("no registered section")
+        }
+    }
+}
 

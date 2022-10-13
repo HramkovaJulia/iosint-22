@@ -2,59 +2,43 @@
 //  PhotosCollectionViewCell.swift
 //  Navigation
 //
-//  Created by Artyom Prima on 30.09.2022.
-//
 
 import UIKit
 
 class PhotosCollectionViewCell: UICollectionViewCell {
-    
-    private lazy var photoImage: UIImageView = {
-        let photoImage = UIImageView(frame: .zero)
-        photoImage.translatesAutoresizingMaskIntoConstraints = false
-        
-        photoImage.contentMode = .scaleToFill
-        return photoImage
+
+    var photo: UIImageView = {
+        let photos = UIImageView()
+        photos.translatesAutoresizingMaskIntoConstraints = false
+        return photos
     }()
-    
-    // MARK: Lifecycle
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+
+    // MARK: - Init section
     
     override init(frame: CGRect) {
-        super.init(frame: .zero)
+        super.init(frame: frame)
+        setupConstraints()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("lol")
+    }
+    
+    private func setupConstraints() {
+        self.contentView.addSubview(photo)
         
-        setupView()
-        setupSubviews()
-        setupLayout()
-    }
-    
-    private func setupView() {
-        contentView.clipsToBounds = true
-        contentView.backgroundColor = .systemBackground
-    }
-    
-    private func setupSubviews() {
-        contentView.addSubview(photoImage)
-    }
-    
-    private func setupLayout() {
         NSLayoutConstraint.activate([
-            photoImage.topAnchor.constraint(equalTo: contentView.topAnchor),
-            photoImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            photoImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            photoImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            photo.topAnchor.constraint(equalTo: contentView.topAnchor),
+            photo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            photo.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            photo.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     
-    // MARK: - Public
+    // MARK: - Run loop
     
-    func setup1(
-        with model: ImageCollection
-    ) {
-        photoImage.image = UIImage(named: model.image)
+    public func configCellCollection(photo: UIImage) {
+        self.photo.image = photo
     }
-    
 }
+
