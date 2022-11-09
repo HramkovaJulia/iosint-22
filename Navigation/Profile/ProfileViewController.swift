@@ -11,10 +11,9 @@ final class ProfileViewController: UIViewController {
     static let photoIdent = "photo"
     static let postIdent = "post"
     
-    var userDisplay: User? = User(loginUser: "Sam", fullNameUser: "Samson", avatarUser: UIImage(named: "post2")!, statusUser: "Boring")
-   
-    var userService = CurrentUserService()
-    var logIn = LoginViewController()
+    var user: User?
+  
+    
     static var postTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -47,7 +46,7 @@ final class ProfileViewController: UIViewController {
             Self.postTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-
+    
     @objc func reloadTableView() {
         Self.postTableView.reloadData()
         Self.postTableView.refreshControl?.endRefreshing()
@@ -57,7 +56,7 @@ final class ProfileViewController: UIViewController {
 // MARK: - Extensions
 
 extension ProfileViewController: UITableViewDataSource {
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 1
@@ -67,7 +66,7 @@ extension ProfileViewController: UITableViewDataSource {
             return 1
         }
     }
-
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
@@ -89,22 +88,23 @@ extension ProfileViewController: UITableViewDelegate {
             return UITableViewCell()
         }
     }
-
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard section == 0 else { return nil }
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Self.headerIdent) as! ProfileHeaderView
         
-        headerView.fullNameLabel.text = userService.userObject.loginUser
-        headerView.statusLabel.text = userService.userObject.statusUser
-        headerView.avatarImageView.image = userService.userObject.avatarUser
+        headerView.fullNameLabel.text = user?.loginUser
+        headerView.statusLabel.text = user?.statusUser
+        headerView.avatarImageView.image =  user?.avatarUser
+       
         return headerView
-        }
+    }
     
-
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return section == 0 ? 220 : 0
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:

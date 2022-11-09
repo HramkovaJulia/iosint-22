@@ -10,10 +10,10 @@ import UIKit
 
 class TestUserService: UserService {
     
-    var userError: User? = User(loginUser: "Sam", fullNameUser: "Samson", avatarUser: UIImage(named: "post2")!, statusUser: "Boring")
+    var userObject: User = User(loginUser: "Sam", fullNameUser: "Samson", avatarUser: UIImage(named: "post2")!, statusUser: "Boring")
     
     func loginCheck(login: String) -> User? {
-        let user = userError
-        return login == userError!.loginUser ? user : nil
+        return login == userObject.loginUser ? userObject : nil
     }
 }
+

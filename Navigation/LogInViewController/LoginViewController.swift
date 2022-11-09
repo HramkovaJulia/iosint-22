@@ -169,20 +169,22 @@ final class LoginViewController: UIViewController {
 
     }
     
+   
+    
     // MARK: - Event handlers
-
+   
     @objc private func touchLoginButton() {
        
 #if DEBUG
-        let userTest = TestUserService()
-        let result = userTest.loginCheck(login: userTest.userError!.loginUser)
+        let userService = TestUserService()
 #else
-        let userCurrent = CurrentUserService()
-        let result = userCurrent.loginCheck(login: userCurrent.userObject.loginUser)
+        let userService = CurrentUserService()
 #endif
-//        userService.userObject.loginUser
+        let result = userService.loginCheck(login: userService.userObject.loginUser)
+        
         if loginField.text == result?.loginUser {
             let profileVC = ProfileViewController()
+            profileVC.user = result!
             navigationController?.setViewControllers([profileVC], animated: true)
         } else {
             let alert = UIAlertController(title: "Alert", message: "Wrong login or password", preferredStyle: .alert)
@@ -191,7 +193,7 @@ final class LoginViewController: UIViewController {
 
         }
     }
-
+    
     @objc private func keyboardShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             loginScrollView.contentOffset.y = keyboardSize.height - (loginScrollView.frame.height - loginButton.frame.minY)
