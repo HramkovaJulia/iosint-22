@@ -24,3 +24,9 @@ class User {
     }
 }
 
+protocol UserService {
+    
+    func loginCheck(login: String) -> User?
+    
+}
+

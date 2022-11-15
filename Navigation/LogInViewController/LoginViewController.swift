@@ -7,8 +7,7 @@ import UIKit
 
 final class LoginViewController: UIViewController {
     
-    
-    public var userService = CurrentUserService()
+    public var loginDelegate: LoginViewControllerDelegate?
     
     // MARK: Visual content
     
@@ -169,22 +168,19 @@ final class LoginViewController: UIViewController {
 
     }
     
-   
-    
     // MARK: - Event handlers
    
     @objc private func touchLoginButton() {
-       
+
 #if DEBUG
-        let userService = TestUserService()
+        let userService = TestUserService().userObject
 #else
-        let userService = CurrentUserService()
+        let userService = CurrentUserService().userObject
 #endif
-        let result = userService.loginCheck(login: userService.userObject.loginUser)
-        
-        if loginField.text == result?.loginUser {
+
+        if loginDelegate?.check(log: loginField.text!, passw: passwordField.text!) == true {
             let profileVC = ProfileViewController()
-            profileVC.user = result!
+            profileVC.user = userService
             navigationController?.setViewControllers([profileVC], animated: true)
         } else {
             let alert = UIAlertController(title: "Alert", message: "Wrong login or password", preferredStyle: .alert)
@@ -215,5 +211,10 @@ extension LoginViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+}
+
+protocol LoginViewControllerDelegate {
+    
+    func check(log: String, passw: String) -> Bool
 }
 
